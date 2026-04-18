@@ -3,7 +3,7 @@ import { Outlet } from "react-router";
 
 const app=()=>{
   return (
-    <div>
+    <div className="">
   <Navbar/>
   <Outlet/>
   </div>

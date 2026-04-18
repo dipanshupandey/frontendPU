@@ -1,6 +1,9 @@
+import LoginForm from "../components/LoginForm";
 const Auth=()=>{
     return (
-        <h1>Auth</h1>
+        <div className="flex justify-center items-center mt-36">
+        <LoginForm/>
+        </div>
     )
 }
 

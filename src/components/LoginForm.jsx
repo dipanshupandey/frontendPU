@@ -1,18 +1,24 @@
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { login } from "../utils/userSlice";
+import { BASE_URL } from "../utils/constants";
 
 const LoginForm = () => {
-    const [email,setEmail]=useState("bhch!23@gmail.com");
-    const [password,setPassword]=useState("dipanshu@123");
-    const handleLoginClick=async ()=>{
+    const [email, setEmail] = useState("bhch!23@gmail.com");
+    const [password, setPassword] = useState("dipanshu@123");
+    const dispatch=useDispatch();
+    const handleLoginClick = async () => {
         try {
-            const res=await axios.post('http://localhost:5050/user/login',{
-            email:"bhch!23@gmail.com",
-            password:"dipanshu@123"
-        },{withCredentials:true});
+          
+            const res = await axios.post(BASE_URL+'user/login', {
+                email: "bhch!23@gmail.com",
+                password: "dipanshu@123"
+            }, { withCredentials: true });
+            
+            dispatch(login(res.data.data));
         } catch (error) {
-         console.log(error);
-         alert("Invalid credentials");  
+            console.log(error);
         }
     }
     return (
@@ -21,12 +27,12 @@ const LoginForm = () => {
                 <legend className="fieldset-legend">Login</legend>
 
                 <label className="label">Email {email}</label>
-                <input type="email" className="input" placeholder="Email" value={email} onChange={(e)=>setEmail(e.target.value)}/>
+                <input type="email" className="input" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
 
                 <label className="label">Password {password}</label>
-                <input type="password" className="input" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} />
+                <input type="password" className="input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
-                <button className="btn btn-neutral mt-4" onClick={()=>handleLoginClick()}>Login</button>
+                <button className="btn btn-neutral mt-4" onClick={() => handleLoginClick()}>Login</button>
             </fieldset>
         </div>
     )

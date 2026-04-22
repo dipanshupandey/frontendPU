@@ -3,11 +3,13 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../utils/userSlice";
 import { BASE_URL } from "../utils/constants";
+import { useNavigate } from "react-router";
 
 const LoginForm = () => {
     const [email, setEmail] = useState("bhch!23@gmail.com");
     const [password, setPassword] = useState("dipanshu@123");
     const dispatch=useDispatch();
+    const Navigate=useNavigate();
     const handleLoginClick = async () => {
         try {
           
@@ -17,6 +19,7 @@ const LoginForm = () => {
             }, { withCredentials: true });
             
             dispatch(login(res.data.data));
+            Navigate("/");
         } catch (error) {
             console.log(error);
         }

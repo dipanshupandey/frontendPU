@@ -11,6 +11,7 @@ import Chat from "./pages/Chat.jsx";
 import Auth from "./pages/Auth.jsx";
 import {Provider} from "react-redux";
 import store from './utils/store.js'
+import Feed from './pages/Feed.jsx'
 
 const router=createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router=createBrowserRouter([
       {
         path:"login",
         element: <Auth/>
+      },
+      {
+        path:"feed",
+        element:<Feed/>
       }
     ]
   }

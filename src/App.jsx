@@ -15,7 +15,7 @@ const App = () => {
       const res = await axios.get(BASE_URL+"profile", { withCredentials: true });
       dispatch(login(res.data));
     } catch (error) {
-      if (error.response && error.response.status === 401) {
+      if (error?.response && error?.response?.status === 401) {
         navigate("/login");
       }
       console.log(error);

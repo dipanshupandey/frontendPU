@@ -1,26 +1,66 @@
 import React from 'react'
 
-const FeedCard = ({user}) => {
-    console.log(user);
-    const {firstName,lastName,gender,skills,about}=user;
+const FeedCard = ({ user }) => {
+  const { firstName, lastName, about, skills = [], photoURL,gender,age } = user;
+
   return (
-    <div>
-    <div className="card bg-base-100 w-96 shadow-sm">
-  <figure className="px-10 pt-10">
-    <img
-      src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-      alt="Shoes"
-      className="rounded-xl" />
-  </figure>
-  <div className="card-body items-center text-center">
-    <h2 className="card-title">{firstName+" "+lastName}</h2>
-    <p>{about}</p>
-    <div className="card-actions">
-      <button className="btn btn-primary">Buy Now</button>
+    <div className="w-[350px] h-[560px] bg-white rounded-3xl shadow-sm overflow-hidden flex flex-col">
+
+      {/* Image */}
+      <div className="h-full w-full p-2">
+        <img
+          src={photoURL}
+          alt="profile"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 px-5 py-4 flex flex-col justify-between">
+
+        {/* Top Content */}
+        <div className="space-y-3">
+          
+          {/* Name */}
+          <h2 className="text-[22px] font-semibold text-gray-900 tracking-tight">
+            {firstName} {lastName}{age ? `, ${age}` : ""}
+          </h2>
+
+          {/* Prompt style (VERY Hinge-like) */}
+          <div>
+            <p className="text-xs text-gray-400 mb-1">
+              About me
+            </p>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              {about}
+            </p>
+          </div>
+
+          {/* Skills as inline context (not feature) */}
+          {skills.length > 0 && (
+            <div>
+              <p className="text-xs text-gray-400 mb-1">
+                Interests
+              </p>
+              <p className="text-sm text-gray-700">
+                {skills.slice(0, 4).join(" • ")}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Bottom Actions */}
+        <div className="flex justify-center items-center gap-52 pt-3">
+          <button className="text-gray-300 hover:text-gray-700 transition text-3xl">
+            ✕
+          </button>
+          <button className="text-gray-300 hover:text-gray-900 transition text-3xl">
+            ♥
+          </button>
+        </div>
+
+      </div>
     </div>
-  </div>
-</div>
-</div>
   )
 }
 

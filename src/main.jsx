@@ -12,6 +12,8 @@ import Auth from "./pages/Auth.jsx";
 import {Provider} from "react-redux";
 import store from './utils/store.js'
 import Feed from './pages/Feed.jsx'
+import Profile from "./pages/Profile.jsx"
+import EditProfile from './pages/EditProfile.jsx'
 
 const router=createBrowserRouter([
   {
@@ -33,6 +35,14 @@ const router=createBrowserRouter([
       {
         path:"feed",
         element:<Feed/>
+      },
+      {
+        path:"profile",
+        element:<Profile/>
+      },
+      {
+        path:"edit",
+        element:<EditProfile/>
       }
     ]
   }

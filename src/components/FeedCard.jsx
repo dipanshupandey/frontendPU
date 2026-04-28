@@ -1,7 +1,12 @@
 import React from 'react'
+import { useNavigate } from 'react-router';
+const FeedCard = ({ user,variant }) => {
+  const { firstName, lastName, about, skills = [], photoURL, gender, age } = user;
+  const navigate=useNavigate();
 
-const FeedCard = ({ user }) => {
-  const { firstName, lastName, about, skills = [], photoURL,gender,age } = user;
+  function handleEditProfile(){
+    navigate("/edit");
+  }
 
   return (
     <div className="w-[350px] h-[560px] bg-white rounded-3xl shadow-sm overflow-hidden flex flex-col">
@@ -20,7 +25,7 @@ const FeedCard = ({ user }) => {
 
         {/* Top Content */}
         <div className="space-y-3">
-          
+
           {/* Name */}
           <h2 className="text-[22px] font-semibold text-gray-900 tracking-tight">
             {firstName} {lastName}{age ? `, ${age}` : ""}
@@ -50,15 +55,22 @@ const FeedCard = ({ user }) => {
         </div>
 
         {/* Bottom Actions */}
-        <div className="flex justify-center items-center gap-52 pt-3">
-          <button className="text-gray-300 hover:text-gray-700 transition text-3xl">
-            ✕
-          </button>
-          <button className="text-gray-300 hover:text-gray-900 transition text-3xl">
-            ♥
-          </button>
-        </div>
-
+        {
+          variant==="feed"&&
+          <div className="flex justify-center items-center gap-52 pt-3">
+            <button className="text-gray-300 hover:text-gray-700 transition text-3xl">
+              ✕
+            </button>
+            <button className="text-gray-300 hover:text-gray-900 transition text-3xl">
+              ♥
+            </button>
+          </div>
+        }
+        {
+          variant==="profile"&&<button onClick={handleEditProfile} className="text-gray-800 font-medium hover:opacity-70 transition">
+  Edit Profile
+</button>
+        }
       </div>
     </div>
   )

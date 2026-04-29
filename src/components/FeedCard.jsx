@@ -31,7 +31,7 @@ const FeedCard = ({ user,variant }) => {
             {firstName} {lastName}{age ? `, ${age}` : ""}
           </h2>
 
-          {/* Prompt style (VERY Hinge-like) */}
+         
           <div>
             <p className="text-xs text-gray-400 mb-1">
               About me

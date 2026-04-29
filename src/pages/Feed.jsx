@@ -26,7 +26,7 @@ const Feed=  ()=>{
         getFeed();
     },[]);
     return ( 
-        <div className="flex items-center justify-center mt-36">
+        <div className="flex items-center justify-center mt-[5%]">
         <FeedCard user={feedArr.length>2?feedArr[3]:{}} variant="feed"/>
         </div>
         )

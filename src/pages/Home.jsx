@@ -31,11 +31,11 @@ const Home = () => {
     playsInline
     className="absolute top-0 left-0 w-full h-full object-cover"
   >
-    <source src="/bg1.mp4" type="video/mp4" />
+    <source src="/bg2.mp4" type="video/mp4" />
   </video>
 
   {/* Overlay (important for readability) */}
-  <div className="hero-overlay bg-black/40 absolute inset-0"></div>
+  <div className="hero-overlay bg-black/20 absolute inset-0"></div>
 
   {/* Content */}
   <div className="hero-content text-neutral-content text-center relative z-10">

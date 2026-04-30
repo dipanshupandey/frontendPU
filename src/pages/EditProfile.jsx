@@ -1,32 +1,45 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useNavigate } from "react-router";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { login } from "../utils/userSlice";
 
 const EditProfile = () => {
-  const user=useSelector(store=>store.user);
-  console.log("select",user);
-  const navigate=useNavigate();
-  const dispatch=useDispatch();
-  const [firstName, setFirstName] = useState(user?.firstName||"");
-  const [lastName, setlastName] = useState(user?.lastName||"");
-  const [about, setabout] = useState(user?.about||"");
-  const [skills, setSkills] = useState(user?.skills||"");
-  const [photoURL, setPhotoURL] = useState(user?.photoURL||"");
+  const user = useSelector(store => store.user);
+  console.log("select", user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setlastName] = useState("");
+  const [about, setabout] = useState("");
+  const [skills, setSkills] = useState("");
+  const [photoURL, setPhotoURL] = useState("");
+  const [error, setError] = useState("");
+
   async function handleEditClick() {
     try {
-     
-      const res=await axios.patch(BASE_URL+"profile/update",{firstName,lastName,about,skills,photoURL},{withCredentials:true});
+      const skillsArray=skills.split(',').map((s)=>s.trim()).filter((s)=>s.length>0);
+      // console.log(skillsArray);
+      const res = await axios.patch(BASE_URL + "profile/update", { firstName, lastName, about, skills:skillsArray, photoURL }, { withCredentials: true });
       // console.log("===>",res);
       dispatch(login(res.data.data));
       navigate("/profile");
     } catch (error) {
-      console.log(error);
+      setError(error?.response?.data?.message||"Something went wrong");
+      console.log(error?.response?.data?.message);
     }
   }
+  useEffect(() => {
+    if (user) {
+      setFirstName(user.firstName || "");
+      setlastName(user.lastName || "");
+      setabout(user.about || "");
+      setSkills(user.skills.join(",") || "");
+      setPhotoURL(user.photoURL || "");
+    }
+  }, [user])
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
       <div className="bg-white w-full max-w-md p-6 rounded shadow-lg space-y-5">
@@ -60,7 +73,11 @@ const EditProfile = () => {
           </div>
         ))}
 
-
+        {error && <div>
+          <p className="text-red-400 text-s mt-1">
+            {error}
+          </p>
+        </div>}
         <button
           className="w-full bg-black text-white py-2.5 rounded-xl 
           hover:bg-gray-900 active:scale-95 transition-all duration-200"

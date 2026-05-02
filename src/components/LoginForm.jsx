@@ -6,8 +6,8 @@ import { BASE_URL } from "../utils/constants";
 import { useNavigate } from "react-router";
 
 const LoginForm = () => {
-    const [email, setEmail] = useState("bhch!23@gmail.com");
-    const [password, setPassword] = useState("dipanshu@123");
+    const [email, setEmail] = useState("dipanshu@gmail.com");
+    const [password, setPassword] = useState("Dipanshu@123");
     const [error,setError]=useState(null);
     const dispatch=useDispatch();
     const Navigate=useNavigate();
@@ -15,8 +15,8 @@ const LoginForm = () => {
         try {
           
             const res = await axios.post(BASE_URL+'user/login', {
-                email: "bhch!23@gmail.com",
-                password: "dipanshu@123"
+                email: email,
+                password: password
             }, { withCredentials: true });
             
             dispatch(login(res.data.data));

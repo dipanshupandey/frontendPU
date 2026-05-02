@@ -14,6 +14,7 @@ import store from './utils/store.js'
 import Feed from './pages/Feed.jsx'
 import Profile from "./pages/Profile.jsx"
 import EditProfile from './pages/EditProfile.jsx'
+import Connections from './pages/Connections.jsx'
 
 const router=createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const router=createBrowserRouter([
       {
         path:"edit",
         element:<EditProfile/>
+      },
+      {
+        path:"connections",
+        element:<Connections/>
       }
     ]
   }

@@ -11,9 +11,6 @@ const Connection = ({ connectionData }) => {
   } = connectionData;
 
   return (
-   <div className="flex justify-center mt-6">
-  <div className="w-full max-w-xl">
-    
     <div className="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm hover:shadow-md transition duration-300 border border-gray-100">
       
       <div className="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
@@ -35,13 +32,10 @@ const Connection = ({ connectionData }) => {
       </div>
 
       <button className="text-sm text-gray-400 hover:text-gray-700 transition">
-        View
+        Chat
       </button>
 
     </div>
-
-  </div>
-</div>
   );
 };
 

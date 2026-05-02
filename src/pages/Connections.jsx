@@ -2,34 +2,62 @@ import React, { useEffect } from 'react';
 import Connection from '../components/Connection';
 import axios from 'axios';
 import { BASE_URL } from '../utils/constants';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { initConnections } from '../utils/connectionsSlice';
-import store from '../utils/store';
-const Connections = () => {
-    const dispatch=useDispatch();
-    const connections=useSelector((store)=>store.connections);
-    async function fetchConnections()
-    {
-        try {
-            const res=await axios.get(BASE_URL+"user/connections",{
-                withCredentials:true
-            });
-            dispatch(initConnections(res.data.data));
-            // console.log(res.data.data);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-    useEffect(()=>{
-        fetchConnections();
-    },[])
-  return (
-    <div>
-       { connections&&connections.map((item,index)=><Connection key={index} connectionData={item}/>)
-        
-       }
-    </div>
-  )
-}
 
-export default Connections
+const Connections = () => {
+  const dispatch = useDispatch();
+  const connections = useSelector((store) => store.connections);
+
+  async function fetchConnections() {
+    try {
+      const res = await axios.get(BASE_URL + "user/connections", {
+        withCredentials: true
+      });
+      dispatch(initConnections(res.data.data));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchConnections();
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-10">
+      
+    
+      <div className="max-w-2xl mx-auto px-4">
+        
+       
+       <h1 className="text-2xl font-semibold text-gray-900 mb-6 tracking-tight">
+  Your Connections
+</h1>
+      
+        {!connections && (
+          <p className="text-gray-500">Loading...</p>
+        )}
+
+      
+        {connections && connections.length === 0 && (
+          <p className="text-gray-500">No connections yet</p>
+        )}
+
+       
+        <div className="space-y-4">
+          {connections &&
+            connections.map((item) => (
+              <Connection
+                key={item._id}   
+                connectionData={item}
+              />
+            ))}
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+export default Connections;

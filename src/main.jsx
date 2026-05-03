@@ -15,6 +15,7 @@ import Feed from './pages/Feed.jsx'
 import Profile from "./pages/Profile.jsx"
 import EditProfile from './pages/EditProfile.jsx'
 import Connections from './pages/Connections.jsx'
+import Requests from './pages/Requests.jsx'
 
 const router=createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router=createBrowserRouter([
       {
         path:"connections",
         element:<Connections/>
+      },
+      {
+        path:"requests",
+        element:<Requests/>
       }
     ]
   }

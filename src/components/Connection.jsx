@@ -1,6 +1,6 @@
 import React from "react";
 
-const Connection = ({ connectionData }) => {
+const Connection = ({ connectionData,variant }) => {
   if (!connectionData) return null;
 
   const {
@@ -30,11 +30,22 @@ const Connection = ({ connectionData }) => {
           {gender}
         </p>
       </div>
-
+    {
+      variant==="connections"?
       <button className="text-sm text-gray-400 hover:text-gray-700 transition">
         Chat
       </button>
-
+      :
+      <div className="flex items-center justify-center gap-3">
+        <button className="text-gray-300 hover:text-gray-900 transition text-2xl">
+              ♥
+            </button>
+         <button className="text-gray-300 hover:text-gray-700 transition text-2xl">
+              ✕
+            </button>
+            
+      </div>
+    }
     </div>
   );
 };

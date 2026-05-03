@@ -3,25 +3,26 @@ import Connection from '../components/Connection';
 import axios from 'axios';
 import { BASE_URL } from '../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { initConnections } from '../utils/connectionsSlice';
+import { setRequests } from '../utils/requestsSlice';
 
-const Connections = () => {
+const Requests = () => {
   const dispatch = useDispatch();
-  const connections = useSelector((store) => store.connections);
+  const requests = useSelector((store) => store.requests);
 
-  async function fetchConnections() {
+  async function fetchRequests() {
     try {
-      const res = await axios.get(BASE_URL + "user/connections", {
+      const res = await axios.get(BASE_URL + "user/requests/interested", {
         withCredentials: true
       });
-      dispatch(initConnections(res.data.data));
+      dispatch(setRequests(res.data));
+      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   }
 
   useEffect(() => {
-    fetchConnections();
+    fetchRequests();
   }, []);
 
   return (
@@ -32,26 +33,26 @@ const Connections = () => {
         
        
        <h1 className="text-2xl font-semibold text-gray-900 mb-6 tracking-tight">
-  Your Connections
+  Pending Requests
 </h1>
       
-        {!connections && (
+        {!requests && (
           <p className="text-gray-500">Loading...</p>
         )}
 
       
-        {connections && connections.length === 0 && (
+        {requests && requests.length === 0 && (
           <p className="text-gray-500">No connections yet</p>
         )}
 
        
         <div className="space-y-4">
-          {connections &&
-            connections.map((item) => (
+          {requests &&
+            requests.map((item) => (
               <Connection
                 key={item._id}   
-                connectionData={item}
-                variant="connections"
+                connectionData={item.fromId}
+                variant="requests"
               />
             ))}
         </div>
@@ -61,4 +62,4 @@ const Connections = () => {
   );
 };
 
-export default Connections;
+export default Requests;

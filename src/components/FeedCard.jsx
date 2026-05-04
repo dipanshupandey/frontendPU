@@ -1,12 +1,26 @@
+import axios from 'axios';
 import React from 'react'
 import { useNavigate } from 'react-router';
+import { BASE_URL } from '../utils/constants';
 const FeedCard = ({ user,variant }) => {
-  const { firstName, lastName, about, skills = [], photoURL, gender, age } = user;
+ 
+  const { firstName, lastName, about, skills = [], photoURL, gender, age, _id } = user;
   const navigate=useNavigate();
-
+   
   function handleEditProfile(){
     navigate("/edit");
   }
+
+  async function sendRequest(status,id){
+    try {
+      const res=await axios.post(BASE_URL+`request/send/${status}/${id}`,{},{withCredentials:true});
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+ 
 
   return (
     <div className="w-[350px] h-[560px] bg-white rounded-3xl shadow-sm overflow-hidden flex flex-col">
@@ -58,10 +72,14 @@ const FeedCard = ({ user,variant }) => {
         {
           variant==="feed"&&
           <div className="flex justify-center items-center gap-52 pt-3">
-            <button className="text-gray-300 hover:text-gray-700 transition text-3xl">
+            <button className="text-gray-300 hover:text-gray-700 transition text-3xl"
+            onClick={()=>sendRequest("skipped",_id)}
+            >
               ✕
             </button>
-            <button className="text-gray-300 hover:text-gray-900 transition text-3xl">
+            <button className="text-gray-300 hover:text-gray-900 transition text-3xl"
+            onClick={()=>sendRequest("interested",_id)}
+            >
               ♥
             </button>
           </div>

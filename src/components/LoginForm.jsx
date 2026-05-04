@@ -43,7 +43,9 @@ const LoginForm = () => {
             },{
                 withCredentials:true
             });
-            console.log(res);
+            // console.log(res);
+            dispatch(login(res.data.data));
+            Navigate("/edit");
         } catch (error) {
             setError(error?.response?.data?.message || "Something went wrong");
         }

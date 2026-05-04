@@ -10,7 +10,7 @@ const Profile = () => {
 
     return (
         <div>
-            <div className=" w-[20%] mx-auto mt-9">
+            <div className=" w-[20%] mx-auto mt-4">
                 <h1 className="text-3xl font-semibold text-gray-900 tracking-tight">
                     Your Space
                 </h1>
@@ -18,7 +18,7 @@ const Profile = () => {
                     Showcase who you are 
                 </p>
             </div>
-            <div className="flex items-center justify-center mt-36">
+            <div className="flex items-center justify-center mt-[4%]">
 
                 <FeedCard user={user ? user : {}} variant="profile" />
             </div>

@@ -2,11 +2,14 @@ import axios from 'axios';
 import React from 'react'
 import { useNavigate } from 'react-router';
 import { BASE_URL } from '../utils/constants';
+import { removeProfile } from '../utils/feedslice';
+import { useDispatch } from 'react-redux';
+
 const FeedCard = ({ user,variant }) => {
  
   const { firstName, lastName, about, skills = [], photoURL, gender, age, _id } = user;
   const navigate=useNavigate();
-   
+  const dispatch=useDispatch();
   function handleEditProfile(){
     navigate("/edit");
   }
@@ -15,6 +18,7 @@ const FeedCard = ({ user,variant }) => {
     try {
       const res=await axios.post(BASE_URL+`request/send/${status}/${id}`,{},{withCredentials:true});
       console.log(res);
+      dispatch(removeProfile(id));
     } catch (error) {
       console.log(error);
     }
@@ -68,7 +72,7 @@ const FeedCard = ({ user,variant }) => {
           )}
         </div>
 
-        {/* Bottom Actions */}
+       
         {
           variant==="feed"&&
           <div className="flex justify-center items-center gap-52 pt-3">

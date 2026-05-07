@@ -53,6 +53,7 @@ const Requests = () => {
                 key={item._id}   
                 connectionData={item.fromId}
                 variant="requests"
+                requestID={item._id}
               />
             ))}
         </div>

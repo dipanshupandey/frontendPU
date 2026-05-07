@@ -42,6 +42,7 @@ const EditProfile = () => {
   }, [user])
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+      
       <div className="bg-white w-full max-w-md p-6 rounded shadow-lg space-y-5">
 
         <h2 className="text-2xl font-semibold text-gray-800 text-center">

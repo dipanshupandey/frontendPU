@@ -18,7 +18,7 @@ const Profile = () => {
                     Showcase who you are 
                 </p>
             </div>
-            <div className="flex items-center justify-center mt-[4%]">
+            <div className="flex items-center justify-center mt-[2%]">
 
                 <FeedCard user={user ? user : {}} variant="profile" />
             </div>

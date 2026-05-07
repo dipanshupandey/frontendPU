@@ -22,7 +22,7 @@ const Home = () => {
     }
     return (
        <div className="hero min-h-screen relative overflow-hidden">
-
+<span className="loading loading-infinity loading-xl"></span>
   {/* Background Video */}
   <video
     autoPlay

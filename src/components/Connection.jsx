@@ -6,22 +6,30 @@ import { removeRequest } from "../utils/requestsSlice";
 
 const Connection = ({ connectionData,variant,requestID=null }) => {
   if (!connectionData) return null;
-  console.log(connectionData);
+  console.log("=>",connectionData);
   const dispatch=useDispatch();
   const {
     firstName = "",
     lastName = "",
     gender = "",
     photoURL = "",
+    _id=""
   } = connectionData;
-
+  console.log(_id);
   async function reviewRequest(status,id){
     try {
       const res=await axios.post(BASE_URL+`request/review/${status}/${id}`,{},{
         withCredentials:true,
       });
       dispatch(removeRequest(id));
-      console.log(res);
+      const res2=await axios.post(BASE_URL+'conversation/create',
+        {
+        participant2:_id
+        }
+        ,{
+        withCredentials:true,
+      })
+      console.log(res2);
     } catch (error) {
       console.log(error);
     }

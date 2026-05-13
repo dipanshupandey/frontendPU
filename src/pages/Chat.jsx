@@ -1,5 +1,11 @@
+import ChatSidebar from "../components/Chat/ChatSidebar";
+import ChatWindow from "../components/Chat/ChatWindow";
+
 const Chat=()=>{
-    return <h1>Chat</h1>
+    return <div className="flex">
+    <ChatSidebar/>
+    <ChatWindow/>
+</div>
 }
 
 export default Chat;

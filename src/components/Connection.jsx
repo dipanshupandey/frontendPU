@@ -3,11 +3,14 @@ import React from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { removeRequest } from "../utils/requestsSlice";
+import { useNavigate } from "react-router";
+
 
 const Connection = ({ connectionData,variant,requestID=null }) => {
   if (!connectionData) return null;
-  console.log("=>",connectionData);
+ 
   const dispatch=useDispatch();
+  const navigate=useNavigate();
   const {
     firstName = "",
     lastName = "",
@@ -29,7 +32,7 @@ const Connection = ({ connectionData,variant,requestID=null }) => {
         ,{
         withCredentials:true,
       })
-      console.log(res2);
+      navigate("/chat");
     } catch (error) {
       console.log(error);
     }

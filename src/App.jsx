@@ -4,12 +4,14 @@ import { BASE_URL } from "./utils/constants";
 import axios from "axios";
 import { useDispatch ,useSelector} from "react-redux";
 import { login } from "./utils/userSlice";
+import { initConnections } from "./utils/connectionsSlice";
 import { useEffect } from "react";
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user= useSelector((store)=>store.user);
-  const fun = async () => {
+  const connections=useSelector((store)=>store.connections);
+  const fetchUser = async () => {
 
     try {
       const res = await axios.get(BASE_URL+"profile", { withCredentials: true });
@@ -21,12 +23,28 @@ const App = () => {
       console.log(error);
     }
   }
+
+  const getConnections=async ()=>{
+    try {
+      const res=await axios.get(BASE_URL+"user/connections",{withCredentials:true});
+   
+      dispatch(initConnections(res.data.data));
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useEffect(() => {
+  
+    if(user) return;
+    fetchUser();
     
-    if(user) return ;
-    
-    fun();
   }, [user]);
+
+  useEffect(()=>{
+    if(user&&!connections.length)
+      getConnections();
+  },[user,connections]);
+
   return (
     <div className="">
       <Navbar />

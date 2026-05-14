@@ -2,10 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const connectionSlice=createSlice({
     name:"connections",
-    initialState:[],
+    initialState:{
+        data:[],
+        loading:false,
+        loaded:false,
+        error:null,
+    },
     reducers:{
         initConnections:(state,action)=>{
-            return action.payload;
+            state.data= action.payload;
+            state.loaded=true;
         }
     }
 })

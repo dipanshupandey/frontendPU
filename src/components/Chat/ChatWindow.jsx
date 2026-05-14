@@ -1,5 +1,5 @@
 const ChatWindow=()=>{
-    return <div className="w-[75%] p-4">
+    return <div className="w-[75%] h-screen p-4">
        <div className="chat chat-start">
   <div className="chat-image avatar">
     <div className="w-10 rounded-full">

@@ -7,7 +7,7 @@ import { initConnections } from '../utils/connectionsSlice';
 
 const Connections = () => {
   const dispatch = useDispatch();
-  const connections = useSelector((store) => store.connections);
+  const connections = useSelector((store) => store.connections.data);
  
 
   return (

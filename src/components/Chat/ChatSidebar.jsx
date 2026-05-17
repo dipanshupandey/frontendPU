@@ -8,13 +8,11 @@ const ChatSidebar=()=>{
     const user=useSelector((store)=>store.user);
     const id=user?._id;
     
-    return <div className=" w-[25%] h-screen overflow-y-auto ">
+    return <div className=" w-[25%]  overflow-y-auto h-full">
         {conversations.map((item,index)=>{
             const chatPartner=item?.participants[0]?._id===id ? item?.participants[1]:item?.participants[0];
-            return <ChatSidebarItem connectionData={chatPartner} key={index} />
+            return <ChatSidebarItem connectionData={chatPartner} key={index} id={item._id}/>
         })}
-       
-         
         
     </div>
 }

@@ -68,7 +68,7 @@ const App = () => {
   },[user,conversations])
   
   return (
-    <div className="">
+    <div className="h-screen ">
       <Navbar />
       <Outlet />
     </div>

@@ -1,38 +1,71 @@
-const ChatWindow=()=>{
-    return <div className="w-[75%] h-screen p-4">
-       <div className="chat chat-start">
-  <div className="chat-image avatar">
-    <div className="w-10 rounded-full">
-      <img
-        alt="Tailwind CSS chat bubble component"
-        src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
-      />
+import { useSelector } from "react-redux";
+import ChatMessage from "./ChatMessage";
+import { useEffect, useRef, useState } from "react";
+import ChatMessageTextArea from "./ChatMessageTextArea";
+import axios from "axios";
+import { BASE_URL } from "../../utils/constants";
+
+const ChatWindow = () => {
+  const {
+    data: conversations,
+    selectedConversationId
+  } = useSelector((store) => store.conversations);
+  const user = useSelector((store) => store.user);
+  const chatContainerRef = useRef(null);
+  const [messages, setMessages] = useState([]);
+  
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (!selectedConversationId)
+      return;
+    const fetchMessages = async () => {
+      try {
+        const res = await axios.get(BASE_URL + `api/conversations/${selectedConversationId}/messages`, { withCredentials: true });
+        console.log(res.data.data);
+        setMessages(res.data.data);
+      } catch (error) {
+        console.log(error.response);
+      }
+    }
+    fetchMessages();
+  }, [selectedConversationId]);
+
+  if (selectedConversationId === null) return <div>No conversations yet</div>
+  const conversation = conversations.find(item => item._id === selectedConversationId);
+
+  return (
+    <div className="w-[75%]  flex flex-col h-full">
+
+
+      <div
+        ref={chatContainerRef}
+        className=" p-6 overflow-y-auto flex-1 "
+      >
+        {messages.map((item, index) => {
+          return (
+            <ChatMessage
+              key={index}
+              text={item.text}
+              css={item.senderId === user._id ? "chat-end" : "chat-start"}
+            />
+          );
+        })}
+      </div>
+
+
+      <div className="shrink-0 ">
+
+        <ChatMessageTextArea />
+      </div>
+
     </div>
-  </div>
-  <div className="chat-header">
-    Obi-Wan Kenobi
-    <time className="text-xs opacity-50">12:45</time>
-  </div>
-  <div className="chat-bubble">You were the Chosen One!</div>
-  <div className="chat-footer opacity-50">Delivered</div>
-</div>
-<div className="chat chat-end">
-  <div className="chat-image avatar">
-    <div className="w-10 rounded-full">
-      <img
-        alt="Tailwind CSS chat bubble component"
-        src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
-      />
-    </div>
-  </div>
-  <div className="chat-header">
-    Anakin
-    <time className="text-xs opacity-50">12:46</time>
-  </div>
-  <div className="chat-bubble">I hate you!</div>
-  <div className="chat-footer opacity-50">Seen at 12:46</div>
-</div>
-    </div>
+  );
 }
 
 export default ChatWindow;

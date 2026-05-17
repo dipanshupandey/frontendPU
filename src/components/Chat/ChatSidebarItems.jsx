@@ -1,4 +1,6 @@
-const ChatSidebarItem = ({ connectionData }) => {
+import { useDispatch } from "react-redux";
+import { setSelectedConversationId } from "../../utils/conversationSlice";
+const ChatSidebarItem = ({ connectionData,id}) => {
     const {
         firstName = "",
         lastName = "",
@@ -6,8 +8,13 @@ const ChatSidebarItem = ({ connectionData }) => {
         photoURL = "",
         _id = ""
     } = connectionData;
+    const dispatch=useDispatch();
+
     return <div>
-        <div className="bg-white  p-4 flex items-center gap-4 shadow-sm hover:bg-gray-100 transition duration-300 border border-gray-100" >
+        <div className="bg-white  p-4 flex items-center gap-4 shadow-sm hover:bg-gray-100 transition duration-300 border border-gray-100" onClick={()=>{
+            dispatch(setSelectedConversationId(id));
+           
+            }} >
 
             <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
                 <img

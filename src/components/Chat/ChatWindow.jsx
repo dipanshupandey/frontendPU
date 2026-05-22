@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import ChatMessageTextArea from "./ChatMessageTextArea";
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
+import socket from "../../socket";
+
 
 const ChatWindow = () => {
   const {
@@ -13,7 +15,7 @@ const ChatWindow = () => {
   const user = useSelector((store) => store.user);
   const chatContainerRef = useRef(null);
   const [messages, setMessages] = useState([]);
-  
+
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -36,6 +38,22 @@ const ChatWindow = () => {
     fetchMessages();
   }, [selectedConversationId]);
 
+  useEffect(()=>{
+    const handleMessageRead=(message)=>{
+      if(message.conversationId!==selectedConversationId)
+      {
+        return ;
+      }
+      setMessages((prev)=>[...prev,message]);
+      alert("pakda");
+    }
+    socket.on("message read",handleMessageRead);
+    return ()=>{
+      socket.off("message read",handleMessageRead);
+    }
+  },[]);
+
+
   if (selectedConversationId === null) return <div>No conversations yet</div>
   const conversation = conversations.find(item => item._id === selectedConversationId);
 
@@ -47,10 +65,10 @@ const ChatWindow = () => {
         ref={chatContainerRef}
         className=" p-6 overflow-y-auto flex-1 "
       >
-        {messages.map((item, index) => {
+        {messages.map((item) => {
           return (
             <ChatMessage
-              key={index}
+              key={item._id}
               text={item.text}
               css={item.senderId === user._id ? "chat-end" : "chat-start"}
             />

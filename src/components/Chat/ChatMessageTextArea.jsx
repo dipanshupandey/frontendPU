@@ -1,5 +1,7 @@
 import ChatSendMessageButton from "./ChatSendMessageButton";
 import { useState } from "react";
+
+
 const ChatMessageTextArea=()=>{
   const [message,setMessage]=useState("");
   
@@ -11,7 +13,7 @@ return  <div className="border-t flex gap-2 justify-center items-center p-4">
         onChange={(e)=>setMessage(e.target.value)}
       />
 
-      <ChatSendMessageButton message={message}/>
+      <ChatSendMessageButton message={message} setMessage={setMessage}/>
     </div>
 
 }

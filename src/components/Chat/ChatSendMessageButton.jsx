@@ -2,8 +2,9 @@ import axios from 'axios';
 import React from 'react'
 import { BASE_URL } from '../../utils/constants';
 import { useSelector } from 'react-redux';
+import socket from "../../socket";
 
-const ChatSendMessageButton = ({message}) => {
+const ChatSendMessageButton = ({message,setMessage}) => {
     
     const conversationId=useSelector(store=>store?.conversations?.selectedConversationId);
 
@@ -15,6 +16,9 @@ const ChatSendMessageButton = ({message}) => {
                 withCredentials:true,
             });
             console.log(res);
+            socket.emit("send_message",res?.data?.data);
+           
+            setMessage("");
         } catch (error) {
             console.log(error.response);
         }

@@ -39,19 +39,20 @@ const ChatWindow = () => {
   }, [selectedConversationId]);
 
   useEffect(()=>{
+    if(!selectedConversationId)
+      return;
+    socket.emit("join conversation",selectedConversationId);
     const handleMessageRead=(message)=>{
-      if(message.conversationId!==selectedConversationId)
-      {
-        return ;
-      }
+      console.log("=?",message,selectedConversationId);
+      if(message?.conversationId===selectedConversationId)
       setMessages((prev)=>[...prev,message]);
-      alert("pakda");
+      
     }
     socket.on("message read",handleMessageRead);
     return ()=>{
       socket.off("message read",handleMessageRead);
     }
-  },[]);
+  },[selectedConversationId]);
 
 
   if (selectedConversationId === null) return <div>No conversations yet</div>

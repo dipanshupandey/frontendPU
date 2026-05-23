@@ -10,13 +10,15 @@ const ChatSendMessageButton = ({message,setMessage}) => {
 
     async function sendMessage() {
         try {
+            if (!message.trim()) return;
+            if(!conversationId) return ;
             const res=await axios.post(BASE_URL+`api/conversations/${conversationId}/messages`,{
                 text:message
             },{
                 withCredentials:true,
             });
             console.log(res);
-            socket.emit("send_message",res?.data?.data);
+            socket.emit("send message",res?.data?.data);
            
             setMessage("");
         } catch (error) {

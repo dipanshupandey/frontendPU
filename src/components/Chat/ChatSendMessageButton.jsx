@@ -18,7 +18,7 @@ const ChatSendMessageButton = ({message,setMessage}) => {
                 withCredentials:true,
             });
             console.log(res);
-            socket.emit("send message",res?.data?.data);
+           
            
             setMessage("");
         } catch (error) {

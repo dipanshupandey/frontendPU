@@ -44,13 +44,14 @@ const ChatWindow = () => {
     socket.emit("join conversation",selectedConversationId);
     const handleMessageRead=(message)=>{
       console.log("=?",message,selectedConversationId);
-      if(message?.conversationId===selectedConversationId)
+
+      if(String(message?.conversationId) === String(selectedConversationId))
       setMessages((prev)=>[...prev,message]);
       
     }
-    socket.on("message read",handleMessageRead);
+    socket.on("message:new",handleMessageRead);
     return ()=>{
-      socket.off("message read",handleMessageRead);
+      socket.off("message:new",handleMessageRead);
     }
   },[selectedConversationId]);
 

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import socket from "../../socket";
 
 const ChatSendMessageButton = ({message,setMessage}) => {
-    
+
     const conversationId=useSelector(store=>store?.conversations?.selectedConversationId);
 
     async function sendMessage() {
@@ -17,7 +17,7 @@ const ChatSendMessageButton = ({message,setMessage}) => {
             },{
                 withCredentials:true,
             });
-            console.log(res);
+            
            
            
             setMessage("");

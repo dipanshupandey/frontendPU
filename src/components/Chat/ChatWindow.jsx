@@ -15,6 +15,7 @@ const ChatWindow = () => {
   const user = useSelector((store) => store.user);
   const chatContainerRef = useRef(null);
   const [messages, setMessages] = useState([]);
+  const selectedConversation = conversations.find(item => item._id === selectedConversationId);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -73,6 +74,8 @@ const ChatWindow = () => {
               key={item._id}
               text={item.text}
               css={item.senderId === user._id ? "chat-end" : "chat-start"}
+              time={item.createdAt}
+              sender={item.senderId===selectedConversation.participants[0]._id?selectedConversation.participants[0]:selectedConversation.participants[1]}
             />
           );
         })}

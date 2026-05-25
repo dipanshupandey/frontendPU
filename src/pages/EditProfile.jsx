@@ -21,9 +21,9 @@ const EditProfile = () => {
   async function handleEditClick() {
     try {
       const skillsArray=skills.split(',').map((s)=>s.trim()).filter((s)=>s.length>0);
-      // console.log(skillsArray);
+     
       const res = await axios.patch(BASE_URL + "profile/update", { firstName, lastName, about, skills:skillsArray, photoURL }, { withCredentials: true });
-      // console.log("===>",res);
+     
       dispatch(login(res.data.data));
       navigate("/profile");
     } catch (error) {

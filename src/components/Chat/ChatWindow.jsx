@@ -30,7 +30,7 @@ const ChatWindow = () => {
     const fetchMessages = async () => {
       try {
         const res = await axios.get(BASE_URL + `api/conversations/${selectedConversationId}/messages`, { withCredentials: true });
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setMessages(res.data.data);
       } catch (error) {
         console.log(error.response);
@@ -44,8 +44,7 @@ const ChatWindow = () => {
       return;
     socket.emit("join conversation",selectedConversationId);
     const handleMessageRead=(message)=>{
-      console.log("=?",message,selectedConversationId);
-
+     
       if(String(message?.conversationId) === String(selectedConversationId))
       setMessages((prev)=>[...prev,message]);
       

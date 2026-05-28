@@ -1,11 +1,11 @@
-import { useSelector } from "react-redux";
+import { useSelector ,useDispatch} from "react-redux";
 import ChatMessage from "./ChatMessage";
 import { useEffect, useRef, useState } from "react";
 import ChatMessageTextArea from "./ChatMessageTextArea";
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
 import socket from "../../socket";
-
+// import {initConversation} from "../../utils/conversationSlice";
 
 const ChatWindow = () => {
   const {
@@ -13,6 +13,7 @@ const ChatWindow = () => {
     selectedConversationId
   } = useSelector((store) => store.conversations);
   const user = useSelector((store) => store.user);
+  const dispatch = useDispatch();
   const chatContainerRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const selectedConversation = conversations.find(item => item._id === selectedConversationId);
@@ -44,10 +45,10 @@ const ChatWindow = () => {
       return;
     socket.emit("join conversation",selectedConversationId);
     const handleMessageRead=(message)=>{
-     
+      // console.log("new message",message);
       if(String(message?.conversationId) === String(selectedConversationId))
       setMessages((prev)=>[...prev,message]);
-      
+     
     }
     socket.on("message:new",handleMessageRead);
     return ()=>{

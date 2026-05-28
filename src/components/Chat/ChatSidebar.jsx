@@ -10,8 +10,10 @@ const ChatSidebar=()=>{
     
     return <div className=" w-[25%]  overflow-y-auto h-full">
         {conversations.map((item,index)=>{
+           
+            const unreadCount=item?.unreadCount[id] || 0;
             const chatPartner=item?.participants[0]?._id===id ? item?.participants[1]:item?.participants[0];
-            return <ChatSidebarItem connectionData={chatPartner} key={index} id={item._id}/>
+            return <ChatSidebarItem connectionData={chatPartner} key={index} id={item._id} unreadCount={unreadCount}/>
         })}
         
     </div>

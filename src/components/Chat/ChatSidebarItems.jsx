@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { setSelectedConversationId } from "../../utils/conversationSlice";
 
 
-const ChatSidebarItem = ({ connectionData,id}) => {
+const ChatSidebarItem = ({ connectionData,id,unreadCount}) => {
     const {
         firstName = "",
         lastName = "",
@@ -35,7 +35,12 @@ const ChatSidebarItem = ({ connectionData,id}) => {
                    online
                 </p>
             </div>
-                   </div>
+            {unreadCount >= 0 && (
+                <div className="bg-[#422AD5] text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadCount}
+                </div>
+            )}
+        </div>
     </div>
 }
 

@@ -1,9 +1,17 @@
 import socket from "../socket";
+import {updateConversationFromMessage} from "./conversationSlice";
+const registerSocketListener=(dispatch)=>{
+    const handleMessage=(message)=>{
+    console.log("New message received:",message);
+    if(message){
+            dispatch(updateConversationFromMessage(message));
+    }
+    }
+    socket.on("message:new",handleMessage);
+    return ()=>{
+        socket.off("message:new",handleMessage);
+    };
+}
 
-const socketListener=()=>{
-socket.on("message:new",(message)=>{
-    console.log("New message received:", message);
-    // You can add code here to update your UI or state with the new message
-});
-};
-export default socketListener;
+
+export default registerSocketListener;

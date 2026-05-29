@@ -6,6 +6,7 @@ import { useDispatch ,useSelector} from "react-redux";
 import { login } from "./utils/userSlice";
 import { initConnections } from "./utils/connectionsSlice";
 import { initConversations } from "./utils/conversationSlice";
+import registerSocketListener from "./utils/socketListener";
 
 import { useEffect } from "react";
 const App = () => {
@@ -45,7 +46,7 @@ const App = () => {
       dispatch(initConversations(conversations.data.data));
 
     } catch (error) {
-      connections.log(error);
+      console.log(error);
     }
   }
   useEffect(() => {
@@ -66,6 +67,12 @@ const App = () => {
       fetchConversations();
     }
   },[user,conversations])
+  
+  useEffect(()=>{
+    if(!user) return;
+    const cleanUp=registerSocketListener(dispatch);
+    return cleanUp;
+  },[user,dispatch]);
   
   return (
     <div className="h-screen ">

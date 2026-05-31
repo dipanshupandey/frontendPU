@@ -1,5 +1,5 @@
 const ChatMessage=({text,css,time,sender})=>{
-  console.log(sender);
+ 
   function formatChatTime(timestamp) {
   const date = new Date(timestamp);
 

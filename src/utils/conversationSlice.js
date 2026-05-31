@@ -18,18 +18,26 @@ const conversationSlice=createSlice({
             state.selectedConversationId= action.payload;
         },
         updateConversationFromMessage:(state,action)=>{
-            const message=action.payload;
+
+            const message=action.payload.message;
+            const unreadCount=action.payload.unreadCount;
+            const receiverId=action.payload.receiverId;
+            console.log("Updating conversation from message:",message);
             const conversationIndex= state.data.findIndex(conv=>conv._id===message.conversationId);
             if(conversationIndex===-1){
                 return;
             }
             const conversation= state.data[conversationIndex];
+            
+            conversation.lastMessage=message.text;
+            conversation.lastMessageAt=message.createdAt;
+            conversation.unreadCount??={};
+            conversation.unreadCount[receiverId]=unreadCount;
+
             if(conversationIndex>0){
-                conversation.lastMessage=message.text;
-                conversation.lastMessageAt=message.createdAt;
-            }
             state.data.splice(conversationIndex,1);
             state.data.unshift(conversation);
+            }
         }
     }
 });

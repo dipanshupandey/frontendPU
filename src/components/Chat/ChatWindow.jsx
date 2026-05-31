@@ -44,8 +44,11 @@ const ChatWindow = () => {
     if(!selectedConversationId)
       return;
     socket.emit("join conversation",selectedConversationId);
-    const handleMessageRead=(message)=>{
-      // console.log("new message",message);
+    const handleMessageRead=(data)=>{
+     
+      const message=data?.message;
+      
+      console.log("New message received in ChatWindow:",message);
       if(String(message?.conversationId) === String(selectedConversationId))
       setMessages((prev)=>[...prev,message]);
      

@@ -1,11 +1,15 @@
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch ,useSelector} from "react-redux";
 import { logout } from "../utils/userSlice";
 import { useNavigate } from "react-router";
+
+
 const Home = () => {
     const dispatch = useDispatch();
+    const user = useSelector((store) => store.user);
     const navigate = useNavigate();
+    
     async function handleLogout() {
         try {
             console.log("logout");
@@ -18,6 +22,15 @@ const Home = () => {
             console.log(error);
             dispatch(logout());
         }
+
+    }
+    function handleGetStarted(){
+      if(user){
+        navigate("/feed");
+      }
+      else{
+        navigate("/login");
+      }
 
     }
     return (
@@ -40,12 +53,16 @@ const Home = () => {
   {/* Content */}
   <div className="hero-content text-neutral-content text-center relative z-10">
     <div className="max-w-md">
-      <h1 className="mb-5 text-5xl font-bold">Hello there</h1>
+      <h1 className="mb-5 text-5xl font-bold">Pair Up</h1>
       <p className="mb-5">
-        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-        quasi. In deleniti eaque aut repudiandae et a id nisi.
+        Where friendships, ideas, and collaborations come together.
+        <br/>
+Join a community of people who love to connect, create, and support each other. Find new friends, collaborate on exciting projects, and turn great ideas into reality with Pair Up.
+
       </p>
-      <button className="btn btn-primary">Get Started</button>
+      <button className="btn btn-primary"
+      onClick={handleGetStarted}
+      >Get Started</button>
     </div>
   </div>
 

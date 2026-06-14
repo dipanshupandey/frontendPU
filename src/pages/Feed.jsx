@@ -1,18 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import FeedCard from "../components/FeedCard";
+import FeedShimmer from "../components/Shimmer";
+import NoOneAround from "../components/NoOneAround";
 import { useDispatch,useSelector } from "react-redux";
 import { addFeed } from "../utils/feedslice";
-import noOneAround from "../assets/NoOneAround.png";
 
 const Feed=  ()=>{
     const dispatch=useDispatch();
     const feedArr=useSelector((store)=>store.feed);
-   
+    const [loading,setLoading]=useState(true);
+
     async function getFeed()
     {
         try {
+            setLoading(true);
             const res= await axios.get(BASE_URL+"user/feed",{
                 withCredentials:true
             });
@@ -20,23 +23,22 @@ const Feed=  ()=>{
             // console.log(res);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
     useEffect(()=>
     {
         getFeed();
     },[]);
-    return ( 
+    return (
         <div className="flex items-center justify-center mt-[5%]">
         {
-        feedArr.length>0?<FeedCard user={feedArr[0]} variant="feed"/>:
-      <div className="h-[60vh] sm:h-[70vh] md:h-[80vh] w-full flex justify-center items-center overflow-hidden">
-  <img
-    src={noOneAround}
-    alt="No one around"
-    className="max-h-full max-w-full object-contain"
-  />
-</div>
+        loading
+            ? <FeedShimmer/>
+            : feedArr.length>0
+                ? <FeedCard user={feedArr[0]} variant="feed"/>
+                : <NoOneAround onRefresh={getFeed}/>
         }
         </div>
         )

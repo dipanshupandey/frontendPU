@@ -8,5 +8,45 @@ body,
   padding: 0;
   height: 100%;
 
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv11", "ss01";
+  letter-spacing: -0.011em;
+  text-rendering: optimizeLegibility;
+}
+
+/* --- Landing animations (Nike bold + Hinge calm) --- */
+@keyframes riseIn {
+  0%   { opacity: 0; transform: translateY(28px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero elements animate on load with a slight stagger */
+.anim-rise {
+  opacity: 0;
+  animation: riseIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Scroll-reveal: hidden until .is-visible is added by IntersectionObserver */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-rise,
+  .reveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }

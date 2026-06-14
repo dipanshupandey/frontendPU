@@ -5,18 +5,19 @@ import { BASE_URL } from '../utils/constants';
 import { removeProfile } from '../utils/feedslice';
 import { useDispatch } from 'react-redux';
 
-const FeedCard = ({ user,variant }) => {
- 
+const FeedCard = ({ user, variant }) => {
+
   const { firstName, lastName, about, skills = [], photoURL, gender, age, _id } = user;
-  const navigate=useNavigate();
-  const dispatch=useDispatch();
-  function handleEditProfile(){
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  function handleEditProfile() {
     navigate("/edit");
   }
 
-  async function sendRequest(status,id){
+  async function sendRequest(status, id) {
     try {
-      const res=await axios.post(BASE_URL+`request/send/${status}/${id}`,{},{withCredentials:true});
+      const res = await axios.post(BASE_URL + `request/send/${status}/${id}`, {}, { withCredentials: true });
       console.log(res);
       dispatch(removeProfile(id));
     } catch (error) {
@@ -24,13 +25,11 @@ const FeedCard = ({ user,variant }) => {
     }
   }
 
- 
-
   return (
-    <div className="w-[350px] h-[560px] bg-white rounded-3xl shadow-sm overflow-hidden flex flex-col">
+    <div className="w-[350px] h-[560px] rounded-3xl overflow-hidden flex flex-col bg-white ring-1 ring-black/5 shadow-sm">
 
-      {/* Image */}
-      <div className="h-full w-full p-2">
+     
+      <div className="h-full w-full overflow-hidden">
         <img
           src={photoURL}
           alt="profile"
@@ -39,60 +38,59 @@ const FeedCard = ({ user,variant }) => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-5 py-4 flex flex-col justify-between">
+      <div className="flex flex-col gap-4 px-5 py-4">
 
-        {/* Top Content */}
-        <div className="space-y-3">
+        {/* Name */}
+        <h2 className="text-[22px] font-semibold tracking-tight text-gray-900">
+          {firstName} {lastName}{age ? `, ${age}` : ""}
+        </h2>
 
-          {/* Name */}
-          <h2 className="text-[22px] font-semibold text-gray-900 tracking-tight">
-            {firstName} {lastName}{age ? `, ${age}` : ""}
-          </h2>
-
-         
+        {/* About */}
+        {about && (
           <div>
-            <p className="text-xs text-gray-400 mb-1">
-              About me
-            </p>
-            <p className="text-sm text-gray-700 leading-relaxed">
+            <p className="mb-1 text-xs text-gray-400">About me</p>
+            <p className="text-sm leading-relaxed text-gray-700 line-clamp-2">
               {about}
             </p>
           </div>
+        )}
 
-          {/* Skills as inline context (not feature) */}
-          {skills.length > 0 && (
-            <div>
-              <p className="text-xs text-gray-400 mb-1">
-                Interests
-              </p>
-              <p className="text-sm text-gray-700">
-                {skills.slice(0, 4).join(" • ")}
-              </p>
-            </div>
-          )}
-        </div>
+        {/* Interests */}
+        {skills.length > 0 && (
+          <div>
+            <p className="mb-1 text-xs text-gray-400">Interests</p>
+            <p className="text-sm text-gray-700">{skills.slice(0, 4).join(" • ")}</p>
+          </div>
+        )}
 
-       
-        {
-          variant==="feed"&&
-          <div className="flex justify-center items-center gap-52 pt-3">
-            <button className="text-gray-300 hover:text-gray-700 transition text-3xl"
-            onClick={()=>sendRequest("skipped",_id)}
+        {/* Actions */}
+        {variant === "feed" && (
+          <div className="mt-1 flex items-center justify-center gap-20">
+            <button
+              onClick={() => sendRequest("skipped", _id)}
+              aria-label="Skip"
+              className="flex h-12 w-12 items-center justify-center rounded-full text-lg text-gray-400 ring-1 ring-gray-200 transition-colors duration-200 hover:text-gray-700"
             >
               ✕
             </button>
-            <button className="text-gray-300 hover:text-gray-900 transition text-3xl"
-            onClick={()=>sendRequest("interested",_id)}
+            <button
+              onClick={() => sendRequest("interested", _id)}
+              aria-label="Like"
+              className="flex h-12 w-12 items-center justify-center rounded-full text-lg text-gray-500 ring-1 ring-gray-200 transition-colors duration-200 hover:text-gray-900"
             >
               ♥
             </button>
           </div>
-        }
-        {
-          variant==="profile"&&<button onClick={handleEditProfile} className="text-gray-800 font-medium hover:opacity-70 transition">
-  Edit Profile
-</button>
-        }
+        )}
+
+        {variant === "profile" && (
+          <button
+            onClick={handleEditProfile}
+            className="mt-1 text-sm font-medium text-gray-800 transition-opacity duration-200 hover:opacity-70"
+          >
+            Edit Profile
+          </button>
+        )}
       </div>
     </div>
   )

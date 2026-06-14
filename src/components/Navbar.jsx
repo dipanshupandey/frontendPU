@@ -37,7 +37,7 @@ const Navbar = () => {
               className="h-8 w-auto"
               alt="Logo"
             /> */}
-           <h1 className="text-xl font-medium">PU</h1> 
+           <h1 className="text-xl font-medium font-">PU</h1> 
           </Link>
         </div>
 
@@ -53,10 +53,10 @@ const Navbar = () => {
                 <li key={item.path}>
                   <Link
                     to={item.path}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                    className={`px-4 py-2  text-sm font-medium transition-all duration-300 ${
                       location.pathname === item.path
                         ? "bg-gray-100 text-gray-900"
-                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                        : "text-gray-600 hover:text-gray-900   hover:underline hover:underline-offset-4"
                     }`}
                   >
                     {item.label}
@@ -91,10 +91,10 @@ const Navbar = () => {
             >
               <li>
                 <Link
-                  to="/"
+                  to="/profile"
                   className="text-gray-700 hover:bg-gray-50 rounded-lg transition-colors duration-200"
                 >
-                  Homepage
+                  Profile
                 </Link>
               </li>
           

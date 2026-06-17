@@ -5,6 +5,7 @@ import ChatMessageTextArea from "./ChatMessageTextArea";
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
 import socket from "../../socket";
+import ChatShimmer from "./ChatShimmer";
 // import {initConversation} from "../../utils/conversationSlice";
 
 const ChatWindow = () => {
@@ -16,25 +17,37 @@ const ChatWindow = () => {
   const dispatch = useDispatch();
   const chatContainerRef = useRef(null);
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
   const selectedConversation = conversations.find(item => item._id === selectedConversationId);
-
+  const [onlineStatus,setOnlineStatus]=useState("Offline");
+  
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
+  
+  const partner = selectedConversation?.participants[0]?._id === user._id
+    ? selectedConversation?.participants[1]
+    : selectedConversation?.participants[0];
+
+  
 
   useEffect(() => {
     if (!selectedConversationId)
       return;
     const fetchMessages = async () => {
       try {
+        setLoading(true);
         const res = await axios.get(BASE_URL + `api/conversations/${selectedConversationId}/messages`, { withCredentials: true });
         // console.log(res.data.data);
         setMessages(res.data.data);
       } catch (error) {
         console.log(error.response);
+      }
+      finally{
+        setLoading(false);
       }
     }
     fetchMessages();
@@ -59,19 +72,65 @@ const ChatWindow = () => {
     }
   },[selectedConversationId]);
 
+  useEffect(()=>{
+    if(!partner?._id) return;
+    
+    console.log(partner);
+    socket.emit("getOnlineStatus",partner?._id);
+    socket.on("onlineStatus",({userId,isOnline})=>{
+      setOnlineStatus(isOnline?"Online":"Offline");
+    })
+   return ()=>{
+    socket.off("onlineStatus");
+   }
+  },[partner?._id]);
 
-  if (selectedConversationId === null) return <div>No conversations yet</div>
-  const conversation = conversations.find(item => item._id === selectedConversationId);
+
+  if (selectedConversationId === null)
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center text-center">
+        <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+          <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4-.8L3 20l1.3-3.9A7.96 7.96 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </div>
+        <h2 className="text-lg font-semibold text-gray-900">Your messages</h2>
+        <p className="text-sm text-gray-400 mt-1">Select a conversation to start chatting</p>
+      </div>
+    );
+
+
 
   return (
-    <div className="w-[75%]  flex flex-col h-full">
+    <div className="flex-1 flex flex-col h-full bg-white">
 
+      <div className="shrink-0 flex items-center gap-3 px-6 py-4 border-b border-gray-100">
+        <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100">
+          <img
+            src={partner?.photoURL || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+            alt="Profile"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="min-w-0">
+          <h2 className="text-[15px] font-semibold text-gray-900 truncate">
+            {partner?.firstName} {partner?.lastName}
+          </h2>
+          <p className="text-[12px] text-gray-400">{onlineStatus}</p>
+        </div>
+      </div>
 
       <div
         ref={chatContainerRef}
-        className=" p-6 overflow-y-auto flex-1 "
+        className="px-6 py-4 overflow-y-auto flex-1 scroll-smooth"
       >
-        {messages.map((item) => {
+        {messages.length === 0 && (
+          <div className="h-full flex items-center justify-center">
+            <p className="text-sm text-gray-400">No messages yet — say hi 👋</p>
+          </div>
+        )}
+        {loading && <ChatShimmer />}
+        {!loading && messages.map((item) => {
           return (
             <ChatMessage
               key={item._id}
@@ -84,9 +143,7 @@ const ChatWindow = () => {
         })}
       </div>
 
-
-      <div className="shrink-0 ">
-
+      <div className="shrink-0">
         <ChatMessageTextArea />
       </div>
 

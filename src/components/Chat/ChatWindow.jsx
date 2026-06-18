@@ -28,7 +28,7 @@ const ChatWindow = () => {
     }
   }, [messages]);
   
-  const partner = selectedConversation?.participants[0]?._id === user._id
+  const partner = selectedConversation?.participants[0]?._id === user?._id
     ? selectedConversation?.participants[1]
     : selectedConversation?.participants[0];
 
@@ -74,15 +74,24 @@ const ChatWindow = () => {
 
   useEffect(()=>{
     if(!partner?._id) return;
-    
-    console.log(partner);
-    socket.emit("getOnlineStatus",partner?._id);
-    socket.on("onlineStatus",({userId,isOnline})=>{
+
+    socket.emit("getOnlineStatus",partner._id);
+
+    const handleInitialStatus=(isOnline)=>{
       setOnlineStatus(isOnline?"Online":"Offline");
-    })
-   return ()=>{
-    socket.off("onlineStatus");
-   }
+    };
+    const handleLiveStatus=({userId,isOnline})=>{
+      if(String(userId)===String(partner._id))
+        setOnlineStatus(isOnline?"Online":"Offline");
+    };
+
+    socket.on("onlineStatus",handleInitialStatus);
+    socket.on("user:statusChanged",handleLiveStatus);
+
+    return ()=>{
+      socket.off("onlineStatus",handleInitialStatus);
+      socket.off("user:statusChanged",handleLiveStatus);
+    };
   },[partner?._id]);
 
 
@@ -116,7 +125,10 @@ const ChatWindow = () => {
           <h2 className="text-[15px] font-semibold text-gray-900 truncate">
             {partner?.firstName} {partner?.lastName}
           </h2>
-          <p className="text-[12px] text-gray-400">{onlineStatus}</p>
+          <p className="text-[12px] text-gray-400 flex items-center gap-1">
+            <span className={`w-2 h-2 rounded-full ${onlineStatus === "Online" ? "bg-green-400" : "bg-gray-400"}`}/>
+            {onlineStatus}
+          </p>
         </div>
       </div>
 
@@ -135,9 +147,9 @@ const ChatWindow = () => {
             <ChatMessage
               key={item._id}
               text={item.text}
-              css={item.senderId === user._id ? "chat-end" : "chat-start"}
+              css={item.senderId === user?._id ? "chat-end" : "chat-start"}
               time={item.createdAt}
-              sender={item.senderId===selectedConversation.participants[0]._id?selectedConversation.participants[0]:selectedConversation.participants[1]}
+              sender={item.senderId===selectedConversation?.participants[0]?._id?selectedConversation?.participants[0]:selectedConversation?.participants[1]}
             />
           );
         })}

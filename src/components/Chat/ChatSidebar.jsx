@@ -19,6 +19,7 @@ const ChatSidebar = () => {
                     <p className="text-sm text-gray-400 text-center px-4 py-8">No conversations yet</p>
                 )}
                 {conversations.map((item, index) => {
+                    
                     const unreadCount = item?.unreadCount[id] || 0;
                     const chatPartner = item?.participants[0]?._id === id ? item?.participants[1] : item?.participants[0];
                     return (
@@ -28,6 +29,7 @@ const ChatSidebar = () => {
                             id={item._id}
                             unreadCount={unreadCount}
                             isActive={item._id === selectedConversationId}
+                            lastMessage={item?.lastMessage || ""}
                         />
                     );
                 })}

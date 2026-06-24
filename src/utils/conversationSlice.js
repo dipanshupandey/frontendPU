@@ -38,8 +38,18 @@ const conversationSlice=createSlice({
             state.data.splice(conversationIndex,1);
             state.data.unshift(conversation);
             }
+        },
+        updateUnreadCount:(state,action)=>{
+            const {conversationId,unreadCount,userId}=action.payload;
+            const conversationIndex=state.data.findIndex(conv=>conv._id===conversationId);
+            if(conversationIndex===-1){
+                return;
+            }
+            const conversation=state.data[conversationIndex];
+            conversation.unreadCount??={};
+            conversation.unreadCount[userId]=unreadCount;
         }
     }
 });
-export const {initConversations,setSelectedConversationId,updateConversationFromMessage}=conversationSlice.actions;
+export const {initConversations,setSelectedConversationId,updateConversationFromMessage,updateUnreadCount}=conversationSlice.actions;
 export default conversationSlice.reducer;

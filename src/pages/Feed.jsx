@@ -7,24 +7,28 @@ import NoOneAround from "../components/NoOneAround";
 import { useDispatch,useSelector } from "react-redux";
 import { addFeed } from "../utils/feedslice";
 
+const LIMIT = 10;
+
 const Feed = () => {
     const dispatch = useDispatch();
     const feedArr = useSelector((store) => store.feed);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const [total, setTotal] = useState(null);
+
+    const hasMore = total === null || page * LIMIT < total;
 
     async function getFeed() {
         try {
             setLoading(true);
             const res = await axios.get(BASE_URL + "user/feed", {
                 withCredentials: true,
-                params: { page, limit: 10 }
+                params: { page, limit: LIMIT }
             });
-            const { data } = res.data;
+            const { data, total: totalCount } = res.data;
             dispatch(addFeed(data));
-            console.log(data);
-            if (data.length === 0) setHasMore(false);
+            setTotal(totalCount);
+           
         } catch (error) {
             console.log(error);
         } finally {
@@ -36,7 +40,6 @@ const Feed = () => {
         getFeed();
     }, [page]);
 
-    // When all profiles on the current page are swiped, fetch the next page
     useEffect(() => {
         if (!loading && feedArr.length === 0 && hasMore) {
             setPage((prev) => prev + 1);
@@ -44,9 +47,10 @@ const Feed = () => {
     }, [feedArr, loading]);
 
     function handleRefresh() {
+        setTotal(null);
         setPage(1);
-        setHasMore(true);
-        getFeed();
+        // if page is already 1, the useEffect won't re-fire, so call directly
+        if (page === 1) getFeed();
     }
 
     return (

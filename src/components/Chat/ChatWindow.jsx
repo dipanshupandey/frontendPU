@@ -53,7 +53,8 @@ const ChatWindow = () => {
 
   
   const handleScroll=()=>{
-    if(chatContainerRef.current.scrollTop<=20)
+ 
+    if(chatContainerRef.current.scrollTop < 300)
     {
       fetchMoreMessages();
     }

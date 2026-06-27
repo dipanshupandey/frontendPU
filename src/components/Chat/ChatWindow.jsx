@@ -1,12 +1,12 @@
 import { useSelector ,useDispatch} from "react-redux";
 import ChatMessage from "./ChatMessage";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState,useLayoutEffect } from "react";
 import ChatMessageTextArea from "./ChatMessageTextArea";
 import axios from "axios";
 import { BASE_URL } from "../../utils/constants";
 import socket from "../../socket";
 import ChatShimmer from "./ChatShimmer";
-// import {initConversation} from "../../utils/conversationSlice";
+
 
 const ChatWindow = () => {
   const {
@@ -16,15 +16,34 @@ const ChatWindow = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const chatContainerRef = useRef(null);
+  const isPrependingRef=useRef(false);
+  const previousScrollHeightRef=useRef(0);
+  const previousScrollTopRef=useRef(0);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const selectedConversation = conversations.find(item => item._id === selectedConversationId);
   const [onlineStatus,setOnlineStatus]=useState("Offline");
+  const [cursor, setCursor] = useState(null);
+  const [hasMoreMessages, setHasMoreMessages] = useState(false);
+  const [loadingMoreMessages, setLoadingMoreMessages] = useState(false);
   
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+      if(isPrependingRef.current===true){
+        const deltaHeight=chatContainerRef.current.scrollHeight-previousScrollHeightRef.current;
+        chatContainerRef?.current?.scrollTo({
+          top:  previousScrollTopRef.current+deltaHeight,
+          behavior: 'auto',
+        });
+        isPrependingRef.current=false;
+      }
+      else
+      {
+      chatContainerRef?.current?.scrollTo({
+        top:chatContainerRef.current.scrollHeight,
+        behavior:'auto'
+      }); 
+      }
     }
   }, [messages]);
   
@@ -33,16 +52,53 @@ const ChatWindow = () => {
     : selectedConversation?.participants[0];
 
   
-
+  const handleScroll=()=>{
+    if(chatContainerRef.current.scrollTop<=20)
+    {
+      fetchMoreMessages();
+    }
+  }
+  const fetchMoreMessages=async()=>{
+    if(!hasMoreMessages || loadingMoreMessages || !selectedConversationId|| !cursor) return;
+    try{
+      setLoadingMoreMessages(true);
+      const res = await axios.get(BASE_URL + `api/conversations/${selectedConversationId}/messages`, { withCredentials: true ,
+        params: {
+          limit: 30,
+          cursor: cursor,
+        },
+      });
+      previousScrollHeightRef.current=chatContainerRef?.current?.scrollHeight;
+      previousScrollTopRef.current=chatContainerRef?.current?.scrollTop;
+      isPrependingRef.current=true;
+      
+      setMessages((prev)=>[...res.data.data,...prev]);
+      setHasMoreMessages(res.data.hasMore);
+      setCursor(res.data.nextCursor);
+    }
+    catch(error){
+      console.log(error.response);
+    }
+    finally{
+      setLoadingMoreMessages(false);
+    }
+  }
   useEffect(() => {
     if (!selectedConversationId)
       return;
     const fetchMessages = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(BASE_URL + `api/conversations/${selectedConversationId}/messages`, { withCredentials: true });
+        const res = await axios.get(BASE_URL + `api/conversations/${selectedConversationId}/messages`, { withCredentials: true ,
+          params: {
+            limit: 30,
+            cursor: null,
+          },
+        });
         // console.log(res.data.data);
         setMessages(res.data.data);
+        setHasMoreMessages(res.data.hasMore);
+        setCursor(res.data.nextCursor);
       } catch (error) {
         console.log(error.response);
       }
@@ -134,7 +190,9 @@ const ChatWindow = () => {
 
       <div
         ref={chatContainerRef}
-        className="px-6 py-4 overflow-y-auto flex-1 scroll-smooth"
+        className="px-6 py-4 overflow-y-auto flex-1 "
+        id="chat-container"
+        onScroll={handleScroll}
       >
         {messages.length === 0 && (
           <div className="h-full flex items-center justify-center">

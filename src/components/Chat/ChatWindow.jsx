@@ -19,6 +19,7 @@ const ChatWindow = () => {
   const isPrependingRef=useRef(false);
   const previousScrollHeightRef=useRef(0);
   const previousScrollTopRef=useRef(0);
+  const isFetchingMoreRef=useRef(false);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const selectedConversation = conversations.find(item => item._id === selectedConversationId);
@@ -60,8 +61,9 @@ const ChatWindow = () => {
     }
   }
   const fetchMoreMessages=async()=>{
-    if(!hasMoreMessages || loadingMoreMessages || !selectedConversationId|| !cursor) return;
+    if(!hasMoreMessages || isFetchingMoreRef.current || !selectedConversationId|| !cursor) return;
     try{
+      isFetchingMoreRef.current=true;
       setLoadingMoreMessages(true);
       const res = await axios.get(BASE_URL + `api/conversations/${selectedConversationId}/messages`, { withCredentials: true ,
         params: {
@@ -72,7 +74,7 @@ const ChatWindow = () => {
       previousScrollHeightRef.current=chatContainerRef?.current?.scrollHeight;
       previousScrollTopRef.current=chatContainerRef?.current?.scrollTop;
       isPrependingRef.current=true;
-      
+
       setMessages((prev)=>[...res.data.data,...prev]);
       setHasMoreMessages(res.data.hasMore);
       setCursor(res.data.nextCursor);
@@ -82,6 +84,7 @@ const ChatWindow = () => {
     }
     finally{
       setLoadingMoreMessages(false);
+      isFetchingMoreRef.current=false;
     }
   }
   useEffect(() => {
@@ -206,7 +209,7 @@ const ChatWindow = () => {
             <ChatMessage
               key={item._id}
               text={item.text}
-              css={item.senderId === user?._id ? "chat-end" : "chat-start"}
+              css={String(item.senderId) === String(user?._id) ? "chat-end" : "chat-start"}
               time={item.createdAt}
               sender={item.senderId===selectedConversation?.participants[0]?._id?selectedConversation?.participants[0]:selectedConversation?.participants[1]}
             />
